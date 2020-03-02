@@ -34,6 +34,7 @@ namespace RandomBattles_v2
             return Damage + rand.Next(-3, 4);
         }
 
+        // When the minotaur dies, drop loot and XP.
         public void Die()
         {
             for (int i = 0; i < LOOT_TABLE.Length; i++)
@@ -52,20 +53,20 @@ namespace RandomBattles_v2
         {
             Health -= damage;
             IsAlive = Health > 0 ? true : false;
-            if (!IsAlive)
+            if (!IsAlive)               // If monster has no health, D I E
             {
                 Die();
             }
+        }
 
-            // Putting this here saves a lot of room in Program.cs
-            //if (IsAlive)
-            //{
-            //    Console.WriteLine("You dealt " + damage + " damage");
-            //}
-            //else
-            //{
-            //    Console.WriteLine("You dealt " + damage + " damage and took down the monster!");
-            //}
+        // A method that shows relevant info about the monster
+        public void Stats()
+        {
+            Console.WriteLine(String.Format("\n{0,-45}", "* * * * * * * * * * * * * * * *"));
+            Console.WriteLine(String.Format("{0,20} {1,-30}", "Health:", Health));
+            Console.WriteLine(String.Format("{0,20} {1,-30}", "Damage:", Damage));
+            Console.WriteLine(String.Format("{0,20} {1,-30}", "Speed", Speed));
+            Console.WriteLine(String.Format("{0,-45}\n", "* * * * * * * * * * * * * * * *"));
         }
     }
 }

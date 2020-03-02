@@ -21,6 +21,15 @@ namespace RandomBattles_v2
             Console.Write("\t" + num1 + " + " + num2 + " = ");
         }
 
+        // Shows addition problems that get harder based on the number passed to the method.
+        public static void ShowSubtractionProblem(int difficulty)
+        {
+            num1 = rand.Next(0, 10 + difficulty);
+            operation = "-";
+            num2 = rand.Next(0, 10 + difficulty);
+            Console.Write("\t" + num1 + " - " + num2 + " = ");
+        }
+
         // Shows multiplication problems that get harder based on the number passed to the method.
         public static void ShowMultiplicationProblem(int difficulty)
         {
@@ -35,7 +44,7 @@ namespace RandomBattles_v2
         {
             num1 = rand.Next(0, 20 + difficulty);
             operation = "/";
-            num2 = rand.Next(0, 5);
+            num2 = rand.Next(1, 5);
             Console.Write("\t" + num1 + " / " + num2 + " = ");
         }
 
@@ -50,7 +59,19 @@ namespace RandomBattles_v2
                 }
                 else
                 {
-                    Console.WriteLine("\tINCORRECT!\n");
+                    Console.WriteLine("\tINCORRECT!");
+                    return false;
+                }
+            }
+            if (operation.Equals("-"))
+            {
+                if (num1 - num2 == solution)
+                {
+                    return true;
+                }
+                else
+                {
+                    Console.WriteLine("\tINCORRECT!");
                     return false;
                 }
             }
@@ -62,7 +83,7 @@ namespace RandomBattles_v2
                 }
                 else
                 {
-                    Console.WriteLine("\tINCORRECT!\n");
+                    Console.WriteLine("\tINCORRECT!");
                     return false;
                 }
             }
@@ -74,7 +95,7 @@ namespace RandomBattles_v2
                 }
                 else
                 {
-                    Console.WriteLine("\tINCORRECT!\n");
+                    Console.WriteLine("\tINCORRECT!");
                     return false;
                 }
             }

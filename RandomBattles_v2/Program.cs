@@ -50,11 +50,12 @@ namespace RandomBattles_v2
                 displayDotDotDot();
 
                 monster = new Minotaur();       // Make the monster
-                Console.WriteLine("\tMinotaur Health:" + monster.Health);
 
-                awesomeWrite("\nA deadly " + monster.Name + " wants to fight!");
+                awesomeWrite("\nA deadly " + monster.Name + " wants to fight!\n");
                 System.Threading.Thread.Sleep(500);
-                awesomeWrite("\nQuickly answer these three math questions to damage the monster!");
+                monster.Stats();
+                System.Threading.Thread.Sleep(1000);
+                awesomeWrite("Quickly answer these three math questions to damage the monster!", 25);
                 System.Threading.Thread.Sleep(500);
 
                 // If one person is faster than the other, add excess speed until the faster person attacks twice.
@@ -75,29 +76,31 @@ namespace RandomBattles_v2
 
                     // The player answers math questions
                     int addAttack, mulAttack, divAttack;
-                    sw.Start();
+                    sw.Reset();
                     try
                     {
                         MathProblems.ShowAdditionProblem(difficulty);
+                        sw.Start();
                         addAttack = MathProblems.Evaluate(Convert.ToInt32(Console.ReadLine())) ? player.AdditionAttack((int)sw.ElapsedMilliseconds) : 0;
                     }
                     catch (Exception) { Console.WriteLine("\tInvalid Answer!\n\n"); addAttack = 0; }
                     sw.Reset();
-                    sw.Start();
                     try
                     {
                         MathProblems.ShowMultiplicationProblem(difficulty);
+                        sw.Start();
                         mulAttack = MathProblems.Evaluate(Convert.ToInt32(Console.ReadLine())) ? player.MultiplicationAttack((int)sw.ElapsedMilliseconds) : 0;
                     }
                     catch (Exception) { Console.WriteLine("\tInvalid Answer!\n\n"); mulAttack = 0; }
                     sw.Reset();
-                    sw.Start();
                     try
                     {
-                        MathProblems.ShowDivisonProblem(difficulty);
-                        divAttack = MathProblems.Evaluate(Convert.ToInt32(Console.ReadLine())) ? player.DivisionAttack((int)sw.ElapsedMilliseconds) : 0;
+                        MathProblems.ShowSubtractionProblem(difficulty);
+                        sw.Start();
+                        divAttack = MathProblems.Evaluate(Convert.ToInt32(Console.ReadLine())) ? player.SubtractionAttack((int)sw.ElapsedMilliseconds) : 0;
                     }
                     catch (Exception) { Console.WriteLine("\tInvalid Answer!\n\n"); divAttack = 0; }
+                    sw.Reset();
                     sw.Stop();
                     Console.WriteLine();
 
@@ -118,31 +121,30 @@ namespace RandomBattles_v2
                             // Player attacks additionaly until they are out of excess speed
                             while (playerExcessSpeed > monster.Speed)
                             {
-                                
                                 monster.TakeDamage(allAttacks);
-                                if (monster.IsAlive)
+                                if (!monster.IsAlive)
                                 {
-                                    awesomeWrite("You dealt " + allAttacks + " again because you are faster\n");
-                                }
-                                else
-                                {
-                                    awesomeWrite("You dealt " + allAttacks + " again because you are faster.  You overpowered the monster!\n");
-                                    monster.IsAlive = false;
+                                    awesomeWrite("Your final blow dealt " + allAttacks + "!\n");
                                     break;
                                 }
+                                
+                                awesomeWrite("You dealt " + allAttacks + " again because you are so fast\n");
+                                
                                 playerExcessSpeed -= monster.Speed;
                             }
-
-                            //If the monster survived this far, it attacks the player.
-                            player.TakeDamage(monsterAttack);
-                            awesomeWrite("You took " + monsterAttack + " damage\n");
-                            System.Threading.Thread.Sleep(1000);
+                            
+                            if (monster.IsAlive)
+                            {
+                                //If the monster survived this far, it attacks the player.
+                                player.TakeDamage(monsterAttack);
+                                awesomeWrite("You took " + monsterAttack + " damage\n");
+                                System.Threading.Thread.Sleep(1000);
+                            }
                         }
                         else
                         {
                             awesomeWrite("You dealt " + allAttacks + " damage and eliminated the minotaur!\n");
                             System.Threading.Thread.Sleep(1000);
-                            monster.IsAlive = false;
                         }
                     }
 
@@ -170,24 +172,23 @@ namespace RandomBattles_v2
                                 else
                                 {
                                     awesomeWrite("You took " + allAttacks + " again because you are slower.  It was too much...\n");
-                                    player.IsAlive = false;
                                     break;
                                 }
                                 monsterExcessSpeed -= player.Speed;
                             }
 
                             //If the player survived this far, it attacks the monster.
-                            
-                            monster.TakeDamage(allAttacks);
-                            awesomeWrite("You dealt " + allAttacks + " damage\n");
-                            System.Threading.Thread.Sleep(1000);
+                            if (player.IsAlive)
+                            {
+                                monster.TakeDamage(allAttacks);
+                                awesomeWrite("You dealt " + allAttacks + " damage\n");
+                                System.Threading.Thread.Sleep(1000);
+                            }
                         }
                         else
                         {
-                            
                             awesomeWrite("You took " + allAttacks + " damage and succumbed to death...\n");
                             System.Threading.Thread.Sleep(1000);
-                            player.IsAlive = false;
                         }
 
                     }
@@ -216,19 +217,21 @@ namespace RandomBattles_v2
 
                     }
 
+                    // Increase difficulty the longer the fight goes on
                     difficulty += 2;
 
+                    // If the round ends and player and monster are still alive, prepare for next round.
                     if (player.IsAlive && monster.IsAlive)
                     {
                         awesomeWrite(
-                            "\nThis fight isn't over!" +
+                            "\n\nThis fight isn't over!" +
                             "\n=======================" +
                             "\n " + player.Name + " : " + player.Health + 
                             "\n " + monster.Name + " : " + monster.Health +
-                            "\n=======================\n");
+                            "\n=======================\n\n");
 
-                        awesomeWrite("Get ready for the next round!!");
-                        System.Threading.Thread.Sleep(2000);
+                        awesomeWrite("Press Enter to start next round!!");
+                        Console.ReadLine();
                     }
                 }
 
@@ -315,16 +318,6 @@ namespace RandomBattles_v2
                 player.IsAlive = false;
             }
         }
-
-        // Show this text when the player levels up
-        static void levelUp()
-        {
-
-        }
-
-
-
-
 
         // A method that types your string letter by letter.
         static void awesomeWrite(string text)
